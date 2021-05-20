@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bhlee.dailylife.databinding.ActivityMainBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -29,11 +30,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth firebaseAuth;
     private GoogleSignInClient googleSignInClient;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         init();
     }
@@ -45,11 +48,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
-        SignInButton signInButton = findViewById(R.id.btn_signIn);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
-        TextView textView = (TextView)signInButton.getChildAt(0);
+        binding.btnSignIn.setSize(SignInButton.SIZE_STANDARD);
+        TextView textView = (TextView)binding.btnSignIn.getChildAt(0);
         textView.setText("Google 계정으로 로그인");
-        signInButton.setOnClickListener(this);
+        binding.btnSignIn.setOnClickListener(this);
     }
 
     @Override

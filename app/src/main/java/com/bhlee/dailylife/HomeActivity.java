@@ -1,19 +1,60 @@
 package com.bhlee.dailylife;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bhlee.dailylife.databinding.ActivityHomeBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
-public class HomeActivity extends AppCompatActivity {
+import java.util.HashMap;
+import java.util.Map;
+
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth firebaseAuth;
+    private ActivityHomeBinding binding;
+    private FirebaseFirestore db;
+    private FirebaseUser user;
+    private String listTitle;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        binding.recyclerView.setHasFixedSize(true);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerView.addItemDecoration(new DividerItemDecoration(binding.recyclerView.getContext(), 1));
+        binding.floatingActionButton.setOnClickListener(this);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
@@ -23,7 +64,6 @@ public class HomeActivity extends AppCompatActivity {
             dlg.setMessage("로그아웃 하시겠습니까?"); // 메시지
             dlg.setPositiveButton("확인",new DialogInterface.OnClickListener(){
                 public void onClick(DialogInterface dialog, int which) {
-                    firebaseAuth = FirebaseAuth.getInstance();
                     logout(firebaseAuth);
                     Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -49,8 +89,59 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.floatingActionButton:
+            {
+                CustomDialog customDialog = new CustomDialog(this);
+                customDialog.callFunction();
+                break;
+            }
+        }
     }
+
+    private class CustomDialog {
+
+        private Context context;
+
+        public CustomDialog(Context context) {
+            this.context = context;
+        }
+
+        public void callFunction() {
+            final Dialog dialog = new Dialog(context);
+
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.custom_dialog);
+            dialog.show();
+
+            final EditText title = (EditText)dialog.findViewById(R.id.listTitle);
+            final Button okButton = (Button)dialog.findViewById(R.id.okButton);
+            final Button cancleButton = (Button)dialog.findViewById(R.id.cancelButton);
+
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listTitle = title.getText().toString();
+                    String listId = db.collection("dailyList").document().getId();
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("listTitle", listTitle);
+                    map.put("listId", listId);
+                    map.put("masterId", user.getUid());
+                    db.collection("dailyList").document(listId).set(map, SetOptions.merge());
+                    Toast.makeText(HomeActivity.this, "생성을 완료했습니다", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            });
+
+            cancleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(HomeActivity.this, "취소했습니다", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            });
+        }
+    }
+
 }
