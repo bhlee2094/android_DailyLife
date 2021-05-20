@@ -25,10 +25,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +41,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseFirestore db;
     private FirebaseUser user;
     private String listTitle;
+    private ArrayList<DailyList> dailyLists;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +54,33 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.addItemDecoration(new DividerItemDecoration(binding.recyclerView.getContext(), 1));
         binding.floatingActionButton.setOnClickListener(this);
+        dailyLists = new ArrayList<>();
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
+        db.collection("dailyList")
+                .whereEqualTo("masterId", user.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful() && task.getResult() != null){
+                            for(DocumentSnapshot documentSnapshot : task.getResult()){
+                                String listTitle = documentSnapshot.getString("listTitle");
+                                String listId = documentSnapshot.getString("listId");
+                                String masterId = documentSnapshot.getString("masterId");
+                                DailyList dailyList = new DailyList(listTitle, listId, masterId);
+                                dailyLists.add(dailyList);
+                            }
+
+                            recyclerViewAdapter = new RecyclerViewAdapter(dailyLists);
+                            binding.recyclerView.setAdapter(recyclerViewAdapter);
+                        }
+                    }
+                });
+
+        binding.uidTextView.setText("유저 ID: " + user.getUid());
     }
 
     @Override
@@ -100,7 +127,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private class CustomDialog {
+    private class CustomDialog { //inner class
 
         private Context context;
 
