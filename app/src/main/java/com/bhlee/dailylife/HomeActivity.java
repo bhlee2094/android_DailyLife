@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bhlee.dailylife.databinding.ActivityHomeBinding;
@@ -24,7 +23,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -40,7 +38,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private ActivityHomeBinding binding;
     private FirebaseFirestore db;
     private FirebaseUser user;
-    private String listTitle;
+    private String str_listTitle;
     private ArrayList<DailyList> dailyLists;
     private RecyclerViewAdapter recyclerViewAdapter;
 
@@ -73,9 +71,36 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                                 DailyList dailyList = new DailyList(listTitle, listId, masterId);
                                 dailyLists.add(dailyList);
                             }
-
                             recyclerViewAdapter = new RecyclerViewAdapter(dailyLists);
                             binding.recyclerView.setAdapter(recyclerViewAdapter);
+                        }
+                    }
+                });
+
+        db.collection("dailyList").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful() && task.getResult() != null){
+                            for(DocumentSnapshot documentSnapshot : task.getResult()){
+                                String listTitle = documentSnapshot.getString("listTitle");
+                                String listId = documentSnapshot.getString("listId");
+                                String masterId = documentSnapshot.getString("masterId");
+                                db.collection("dailyList/"+ listId + "/addFriends").whereEqualTo("uid", user.getUid()).get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if(task.isSuccessful() && task.getResult() != null){
+                                                    for(DocumentSnapshot documentSnapshot1 : task.getResult()) {
+                                                        DailyList dailyList = new DailyList(listTitle, listId, masterId);
+                                                        dailyLists.add(dailyList);
+                                                    }
+                                                    recyclerViewAdapter = new RecyclerViewAdapter(dailyLists);
+                                                    binding.recyclerView.setAdapter(recyclerViewAdapter);
+                                                }
+                                            }
+                                        });
+                            }
                         }
                     }
                 });
@@ -100,7 +125,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             dlg.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(HomeActivity.this, "취소되었습니다", Toast.LENGTH_SHORT).show();
                 }
             });
             dlg.show();
@@ -123,6 +147,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 CustomDialog customDialog = new CustomDialog(this);
                 customDialog.callFunction();
                 break;
+            }
+            case R.id.floatingActionButton_reflesh:
+            {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
             }
         }
     }
@@ -149,14 +179,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listTitle = title.getText().toString();
+                    str_listTitle = title.getText().toString();
                     String listId = db.collection("dailyList").document().getId();
                     Map<String, Object> map = new HashMap<>();
-                    map.put("listTitle", listTitle);
+                    map.put("listTitle", str_listTitle);
                     map.put("listId", listId);
                     map.put("masterId", user.getUid());
                     db.collection("dailyList").document(listId).set(map, SetOptions.merge());
                     Toast.makeText(HomeActivity.this, "생성을 완료했습니다", Toast.LENGTH_SHORT).show();
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
                     dialog.dismiss();
                 }
             });

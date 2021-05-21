@@ -1,15 +1,17 @@
 package com.bhlee.dailylife;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<MyItemView> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyItemView> {
 
     private ArrayList<DailyList> list = new ArrayList<>();
 
@@ -35,5 +37,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyItemView> {
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public class MyItemView extends RecyclerView.ViewHolder {
+
+        public TextView listTitle;
+        public TextView masterId;
+
+        public MyItemView(@NonNull View itemView) {
+            super(itemView);
+            listTitle = itemView.findViewById(R.id.list_title);
+            masterId = itemView.findViewById(R.id.master_id);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(itemView.getContext(), ListActivity.class);
+                    intent.putExtra("listTitle", list.get(getAdapterPosition()).getListTitle());
+                    intent.putExtra("listId", list.get(getAdapterPosition()).getListId());
+                    intent.putExtra("masterId", list.get(getAdapterPosition()).getMasterId());
+                    itemView.getContext().startActivity(intent);
+                }
+            });
+        }
     }
 }
