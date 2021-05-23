@@ -39,6 +39,10 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 
         binding.titleTextView.setText(listTitle);
         binding.floatingActionButton2.setOnClickListener(this);
+        binding.materialCalendarView.addDecorators(
+                new SaturdayDecorator(),
+                new SundayDecorator()
+        );
     }
 
     @Override
