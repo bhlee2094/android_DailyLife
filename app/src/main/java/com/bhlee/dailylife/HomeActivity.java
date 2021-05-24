@@ -11,9 +11,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -41,6 +44,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private String str_listTitle;
     private ArrayList<DailyList> dailyLists;
     private RecyclerViewAdapter recyclerViewAdapter;
+    private Animation fab_open, fab_close;
+    private Boolean isFabOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +53,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
+
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.addItemDecoration(new DividerItemDecoration(binding.recyclerView.getContext(), 1));
         binding.floatingActionButton.setOnClickListener(this);
+        binding.floatingActionButtonAdd.setOnClickListener(this);
+        binding.floatingActionButtonReflesh.setOnClickListener(this);
+        binding.floatingActionButtonSend.setOnClickListener(this);
+
         dailyLists = new ArrayList<>();
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -144,6 +156,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.floatingActionButton:
             {
+                anim();
+                break;
+            }
+            case R.id.floatingActionButton_add:
+            {
                 CustomDialog customDialog = new CustomDialog(this);
                 customDialog.callFunction();
                 break;
@@ -153,7 +170,36 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = getIntent();
                 finish();
                 startActivity(intent);
+                break;
             }
+            /*case R.id.floatingActionButton_send:
+            {
+                CustomDialog2 customDialog2 = new CustomDialog2(this);
+                customDialog2.callFunction();
+                break;
+            }*/
+        }
+    }
+
+    private void anim(){
+        if(isFabOpen){
+            binding.floatingActionButton.setImageResource(R.drawable.ic_baseline_add_24);
+            /*binding.floatingActionButtonSend.startAnimation(fab_close);*/
+            binding.floatingActionButtonReflesh.startAnimation(fab_close);
+            binding.floatingActionButtonAdd.startAnimation(fab_close);
+            /*binding.floatingActionButtonSend.setClickable(false);*/
+            binding.floatingActionButtonReflesh.setClickable(false);
+            binding.floatingActionButtonAdd.setClickable(false);
+            isFabOpen = false;
+        }else{
+            binding.floatingActionButton.setImageResource(R.drawable.ic_baseline_close_24);
+            /*binding.floatingActionButtonSend.startAnimation(fab_open);*/
+            binding.floatingActionButtonReflesh.startAnimation(fab_open);
+            binding.floatingActionButtonAdd.startAnimation(fab_open);
+            /*binding.floatingActionButtonSend.setClickable(true);*/
+            binding.floatingActionButtonReflesh.setClickable(true);
+            binding.floatingActionButtonAdd.setClickable(true);
+            isFabOpen = true;
         }
     }
 
@@ -204,4 +250,52 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /*private class CustomDialog2 { //inner class
+
+        private Context context;
+
+        public CustomDialog2(Context context) {
+            this.context = context;
+        }
+
+        public void callFunction() {
+            final Dialog dialog = new Dialog(context);
+
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.custom_dialog3);
+            dialog.show();
+
+            final EditText title = (EditText)dialog.findViewById(R.id.listTitle);
+            final Button okButton = (Button)dialog.findViewById(R.id.okButton);
+            final Button cancleButton = (Button)dialog.findViewById(R.id.cancelButton);
+
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String number = title.getText().toString();
+                    String id = user.getUid();
+                    if(number.length() > 0){
+                        sendSMS(number, id);
+                        Toast.makeText(HomeActivity.this, "메시지 전송 성공", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(HomeActivity.this, "전화번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    }
+                    dialog.dismiss();
+                }
+            });
+
+            cancleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(HomeActivity.this, "취소했습니다", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            });
+        }
+    }
+
+    private void sendSMS(String phoneNumber, String message){
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+    }*/
 }

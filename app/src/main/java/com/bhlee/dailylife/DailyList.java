@@ -1,6 +1,8 @@
 package com.bhlee.dailylife;
 
-public class DailyList extends MyItem {
+import java.io.Serializable;
+
+public class DailyList implements Serializable {
     private String listTitle;
     private String listId;
     private String masterId;

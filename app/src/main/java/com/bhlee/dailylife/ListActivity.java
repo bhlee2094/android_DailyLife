@@ -1,5 +1,6 @@
 package com.bhlee.dailylife;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
@@ -15,6 +16,9 @@ import android.widget.Toast;
 import com.bhlee.dailylife.databinding.ActivityListBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +47,18 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 new SaturdayDecorator(),
                 new SundayDecorator()
         );
+        binding.materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                Intent memoIntent = new Intent(ListActivity.this, MemoActivity.class);
+                memoIntent.putExtra("listId", listId);
+                memoIntent.putExtra("year", date.getYear());
+                memoIntent.putExtra("month", date.getMonth() + 1);
+                memoIntent.putExtra("day", date.getDay());
+                startActivity(memoIntent);
+
+            }
+        });
     }
 
     @Override

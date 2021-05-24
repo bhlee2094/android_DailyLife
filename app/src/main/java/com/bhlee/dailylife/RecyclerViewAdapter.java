@@ -31,7 +31,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull MyItemView holder, int position) {
         DailyList dailyList = list.get(position);
         holder.listTitle.setText(dailyList.getListTitle());
-        holder.masterId.setText(dailyList.getMasterId());
     }
 
     @Override
@@ -42,12 +41,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class MyItemView extends RecyclerView.ViewHolder {
 
         public TextView listTitle;
-        public TextView masterId;
 
         public MyItemView(@NonNull View itemView) {
             super(itemView);
             listTitle = itemView.findViewById(R.id.list_title);
-            masterId = itemView.findViewById(R.id.master_id);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

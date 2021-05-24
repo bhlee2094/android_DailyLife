@@ -19,6 +19,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000000"
+        app:layout_constraintTop_toBottomOf="@id/textView3"
+        app:layout_constraintBottom_toTopOf="@id/scrollView"/>
+
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -70,17 +77,51 @@
         app:layout_constraintRight_toLeftOf="@id/floatingActionButton" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        app:backgroundTint="#CDDC39"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@id/floatingActionButton_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_message_24"
+        tools:ignore="VectorDrawableCompat" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        app:backgroundTint="#CDDC39"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@id/floatingActionButton_reflesh"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_playlist_add_24"
+        tools:ignore="VectorDrawableCompat" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton_reflesh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:clickable="true"
+        android:visibility="invisible"
         app:backgroundTint="#CDDC39"
         app:fabSize="normal"
-
+        app:layout_constraintBottom_toTopOf="@id/floatingActionButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_refresh_24"
         tools:ignore="VectorDrawableCompat" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
