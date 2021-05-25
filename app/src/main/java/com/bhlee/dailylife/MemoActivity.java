@@ -3,6 +3,7 @@ package com.bhlee.dailylife;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,7 @@ public class MemoActivity extends AppCompatActivity {
     private ActivityMemoBinding binding;
     private FirebaseFirestore db;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,14 +45,14 @@ public class MemoActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
+                        if(task.isSuccessful() && task.getResult() != null){
                             DocumentSnapshot documentSnapshot = task.getResult();
                             binding.memoEditText.setText(documentSnapshot.getString("memo"));
                         }
                     }
                 });
 
-        binding.dateTextView.setText(year + " " + month + " " + day + "메모");
+        binding.dateTextView.setText(year + " " + month + " " + day + " 메모");
         binding.btnMemoSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -3,12 +3,15 @@ package com.bhlee.dailylife;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -25,9 +28,11 @@ import java.util.Map;
 
 public class ListActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ActivityListBinding binding;
     private String listId;
     private FirebaseFirestore db;
+    private Animation fab_open, fab_close;
+    private Boolean isFabOpen = false;
+    private ActivityListBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +43,16 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = getIntent();
         listId = intent.getStringExtra("listId");
         String listTitle = intent.getStringExtra("listTitle");
-        String masterId = intent.getStringExtra("masterId");
+        //String masterId = intent.getStringExtra("masterId");
         db = FirebaseFirestore.getInstance();
+
+        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
 
         binding.titleTextView.setText(listTitle);
         binding.floatingActionButton2.setOnClickListener(this);
+        binding.floatingActionButtonAccountBook.setOnClickListener(this);
+        binding.floatingActionButtonAddFriends.setOnClickListener(this);
         binding.materialCalendarView.addDecorators(
                 new SaturdayDecorator(),
                 new SundayDecorator()
@@ -62,15 +72,51 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-        CustomDialog customDialog = new CustomDialog(this);
-        customDialog.callFunction();
+        switch (v.getId()){
+            case R.id.floatingActionButton2:
+            {
+                anim();
+                break;
+            }
+            case R.id.floatingActionButton_addFriends:
+            {
+                CustomDialog customDialog = new CustomDialog(this);
+                customDialog.callFunction();
+                break;
+            }
+            case R.id.floatingActionButton_accountBook:
+            {
+                Intent intent = new Intent(this, AccountBookActivity.class);
+                startActivity(intent);
+                break;
+            }
+        }
+    }
+
+    private void anim(){
+        if(isFabOpen){
+            binding.floatingActionButton2.setImageResource(R.drawable.ic_baseline_add_24);
+            binding.floatingActionButtonAddFriends.startAnimation(fab_close);
+            binding.floatingActionButtonAccountBook.startAnimation(fab_close);
+            binding.floatingActionButtonAddFriends.setClickable(false);
+            binding.floatingActionButtonAccountBook.setClickable(false);
+            isFabOpen = false;
+        }else{
+            binding.floatingActionButton2.setImageResource(R.drawable.ic_baseline_close_24);
+            binding.floatingActionButtonAddFriends.startAnimation(fab_open);
+            binding.floatingActionButtonAccountBook.startAnimation(fab_open);
+            binding.floatingActionButtonAddFriends.setClickable(true);
+            binding.floatingActionButtonAccountBook.setClickable(true);
+            isFabOpen = true;
+        }
     }
 
     private class CustomDialog { //inner class
 
-        private Context context;
+        private final Context context;
 
         public CustomDialog(Context context) {
             this.context = context;

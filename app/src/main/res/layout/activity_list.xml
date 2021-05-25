@@ -41,6 +41,44 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_add_24"
+        tools:ignore="VectorDrawableCompat"
+        android:focusable="true"
+        android:contentDescription="mainButton2" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton_addFriends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:contentDescription="addFriendsButton"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:backgroundTint="#CDDC39"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@id/floatingActionButton2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_person_add_24"
+        tools:ignore="VectorDrawableCompat" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton_accountBook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:contentDescription="accountBookButton"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:backgroundTint="#CDDC39"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@id/floatingActionButton_addFriends"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_money_24"
         tools:ignore="VectorDrawableCompat" />
 
 

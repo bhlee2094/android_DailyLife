@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -47,6 +48,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private Animation fab_open, fab_close;
     private Boolean isFabOpen = false;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,8 +85,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                                 DailyList dailyList = new DailyList(listTitle, listId, masterId);
                                 dailyLists.add(dailyList);
                             }
-                            recyclerViewAdapter = new RecyclerViewAdapter(dailyLists);
-                            binding.recyclerView.setAdapter(recyclerViewAdapter);
                         }
                     }
                 });
@@ -151,6 +151,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -205,7 +206,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private class CustomDialog { //inner class
 
-        private Context context;
+        private final Context context;
 
         public CustomDialog(Context context) {
             this.context = context;
