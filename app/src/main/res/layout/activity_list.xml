@@ -16,17 +16,27 @@
         android:textSize="24sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:id="@+id/materialCalendarView"
-        app:mcv_selectionColor="#d2d2d2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_textView"
-        app:layout_constraintBottom_toTopOf="@id/floatingActionButton2"/>
+        app:layout_constraintBottom_toTopOf="@id/scrollView"/>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/title_textView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                android:id="@+id/materialCalendarView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:mcv_selectionColor="#d2d2d2" />
+        </LinearLayout>
+    </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton2"
