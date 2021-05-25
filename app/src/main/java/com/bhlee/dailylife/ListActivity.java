@@ -14,9 +14,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bhlee.dailylife.databinding.ActivityListBinding;
+import com.bhlee.dailylife.databinding.CustomDialogBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -126,12 +128,16 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
             final Dialog dialog = new Dialog(context);
 
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.custom_dialog2);
+            dialog.setContentView(R.layout.custom_dialog);
             dialog.show();
 
+            TextView textView = (TextView)dialog.findViewById(R.id.title);
             final EditText title = (EditText)dialog.findViewById(R.id.listTitle);
             final Button okButton = (Button)dialog.findViewById(R.id.okButton);
             final Button cancleButton = (Button)dialog.findViewById(R.id.cancelButton);
+
+            textView.setText("친구 추가히기");
+            title.setHint("친구 ID를 입력하세요");
 
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override

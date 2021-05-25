@@ -44,6 +44,7 @@
 
     </com.google.android.gms.common.SignInButton>
 
+
     <Button
         android:id="@+id/btn_login"
         android:layout_width="200dp"
@@ -52,9 +53,35 @@
         android:background="@drawable/mainbutton"
         android:text="간단 로그인"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/btn_join"
+        app:layout_constraintBottom_toTopOf="@id/editTextTextEmailAddress2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextTextEmailAddress2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:hint="email 입력해주세요"
+        tools:layout_editor_absoluteX="101dp"
+        tools:layout_editor_absoluteY="551dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/editTextTextPassword2"/>
+
+    <EditText
+        android:id="@+id/editTextTextPassword2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="password 입력해주세요"
+        tools:layout_editor_absoluteX="101dp"
+        tools:layout_editor_absoluteY="551dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btn_join"/>
 
     <Button
         android:id="@+id/btn_join"

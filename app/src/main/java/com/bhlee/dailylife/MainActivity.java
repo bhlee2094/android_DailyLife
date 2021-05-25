@@ -54,14 +54,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView textView = (TextView)binding.btnSignIn.getChildAt(0);
         textView.setText("Google 계정으로 로그인");
         binding.btnSignIn.setOnClickListener(this);
+        binding.btnJoin.setOnClickListener(this);
+        binding.btnLogin.setOnClickListener(this);
     }
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_signIn) {
-            signIn();
+        switch (v.getId()){
+            case R.id.btn_signIn:
+            {
+                signIn();
+                break;
+            }
+            case R.id.btn_join:
+            {
+                Intent intent = new Intent(this, JoinActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.btn_login:
+            {
+                if(binding.editTextTextEmailAddress2.getText().toString().length() > 0 && binding.editTextTextPassword2.getText().toString().length() > 0){
+                    firebaseAuth.signInWithEmailAndPassword(binding.editTextTextEmailAddress2.getText().toString(), binding.editTextTextPassword2.getText().toString())
+                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if(task.isSuccessful()){
+                                        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
+                }
+                break;
+            }
         }
+
     }
 
     private void signIn(){

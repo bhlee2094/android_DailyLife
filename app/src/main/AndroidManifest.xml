@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".AccountBookActivity"></activity>
+        <activity android:name=".JoinActivity"></activity>
+        <activity android:name=".AccountBookActivity" />
         <activity android:name=".MemoActivity" />
         <activity android:name=".ListActivity" />
         <activity android:name=".HomeActivity" />

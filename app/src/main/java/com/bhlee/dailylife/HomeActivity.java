@@ -244,7 +244,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             cancleButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(HomeActivity.this, "취소했습니다", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
             });
@@ -263,7 +262,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             final Dialog dialog = new Dialog(context);
 
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.custom_dialog3);
+            dialog.setContentView(R.layout.custom_dialog);
             dialog.show();
 
             final EditText title = (EditText)dialog.findViewById(R.id.listTitle);
