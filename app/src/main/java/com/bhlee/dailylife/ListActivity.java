@@ -55,6 +55,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 memoIntent.putExtra("year", date.getYear());
                 memoIntent.putExtra("month", date.getMonth() + 1);
                 memoIntent.putExtra("day", date.getDay());
+                memoIntent.putExtra("hash", date.hashCode());
                 startActivity(memoIntent);
 
             }
