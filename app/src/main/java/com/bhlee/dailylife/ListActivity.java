@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -25,16 +26,19 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ListActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int RC_Memo = 2;
     private String listId;
     private FirebaseFirestore db;
     private Animation fab_open, fab_close;
     private Boolean isFabOpen = false;
     private ActivityListBinding binding;
+    private CalendarDay calendarDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +49,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = getIntent();
         listId = intent.getStringExtra("listId");
         String listTitle = intent.getStringExtra("listTitle");
-        //String masterId = intent.getStringExtra("masterId");
         db = FirebaseFirestore.getInstance();
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
@@ -68,10 +71,21 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 memoIntent.putExtra("month", date.getMonth() + 1);
                 memoIntent.putExtra("day", date.getDay());
                 memoIntent.putExtra("hash", date.hashCode());
-                startActivity(memoIntent);
-
+                calendarDay = date;
+                startActivityForResult(memoIntent, RC_Memo);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == RC_Memo){
+            if(resultCode == RESULT_OK){
+                binding.materialCalendarView.addDecorator(new EventDecorator(Color.RED, Collections.singleton(calendarDay)));
+            }
+        }
     }
 
     @SuppressLint("NonConstantResourceId")

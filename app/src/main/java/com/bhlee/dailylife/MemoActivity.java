@@ -5,17 +5,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bhlee.dailylife.databinding.ActivityListBinding;
 import com.bhlee.dailylife.databinding.ActivityMemoBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +64,8 @@ public class MemoActivity extends AppCompatActivity {
                 map.put("memo", binding.memoEditText.getText().toString());
                 db.collection("dailyList/"+ listId + "/memo").document(str_hash).set(map, SetOptions.merge());
                 Toast.makeText(MemoActivity.this, "메모 저장완료", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
+                finish();
             }
         });
     }
