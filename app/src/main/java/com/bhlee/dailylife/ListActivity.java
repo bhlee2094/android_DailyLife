@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bhlee.dailylife.databinding.ActivityListBinding;
-import com.bhlee.dailylife.databinding.CustomDialogBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -106,6 +105,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.floatingActionButton_accountBook:
             {
                 Intent intent = new Intent(this, AccountBookActivity.class);
+                intent.putExtra("listId", listId);
                 startActivity(intent);
                 break;
             }
